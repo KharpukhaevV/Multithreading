@@ -49,11 +49,9 @@ public class ScalableThreadPool implements ThreadPool{
 
         workerQueue.put(runnable);
         if(workerQueue.size() > workerThreads.size() && workerThreads.size() == min){
-            for (int i = min; i < max ; i++) {
-                Thread t = new Thread(new Worker("Custom_Pool_Thread_" + (i + 1), workerQueue, this));
-                t.start();
-                workerThreads.add(t);
-            }
+            Thread t = new Thread(new Worker("Custom_Pool_Thread_" + (workerThreads.size() + 1), workerQueue, this));
+            workerThreads.add(t);
+            t.start();
         }
         if (workerQueue.size() < workerThreads.size() && workerThreads.size() > min && workerQueue.size() >= min){
             for (int i = workerThreads.size()-1; i >=workerQueue.size()-1; i--) {
