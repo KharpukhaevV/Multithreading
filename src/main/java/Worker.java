@@ -14,6 +14,11 @@ public class Worker extends Thread{
     public void run() {
         while (!threadPool.getIsShutDown().get() || !workQueue.isEmpty()) {
             try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
                 workQueue.take().run();
             } catch (InterruptedException e) {
                 e.printStackTrace();

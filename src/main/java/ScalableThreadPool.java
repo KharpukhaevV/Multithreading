@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -37,19 +36,10 @@ public class ScalableThreadPool implements ThreadPool{
 
     @Override
     public void execute(Runnable runnable) throws InterruptedException {
-//        if (workerQueue.size() < min) {
-//            workerQueue.put(runnable);
-//        } else {
-//            if (workerQueue.size() <= max) {
-//                Thread t = new Worker("Custom_Pool_Thread_" + (workerThreads.size() + 1), workerQueue, this);
-//                workerThreads.add(t);
-//                t.start();
-//            }
-//        }
-
         workerQueue.put(runnable);
         if(workerQueue.size() > workerThreads.size() && workerThreads.size() == min){
             Thread t = new Thread(new Worker("Custom_Pool_Thread_" + (workerThreads.size() + 1), workerQueue, this));
+            t.setName("Custom_Pool_Thread_" + (workerThreads.size() + 1));
             workerThreads.add(t);
             t.start();
         }
