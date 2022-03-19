@@ -1,19 +1,18 @@
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Worker extends Thread{
     private final BlockingQueue<Runnable> workQueue;
+    private ThreadPool threadPool;
 
-    public Worker(String name, BlockingQueue<Runnable> workQueue) {
+    public Worker(String name, BlockingQueue<Runnable> workQueue, ThreadPool threadPool) {
         super(name);
         this.workQueue = workQueue;
+        this.threadPool = threadPool;
     }
 
     public void run() {
-        while (workQueue.isEmpty()) {
-//            Runnable r;
-//            while ((r = workQueue.poll()) != null) {
-//                r.run();
-//            }
+        while (!threadPool.getIsShutDown().get() || !workQueue.isEmpty()) {
             try {
                 workQueue.take().run();
             } catch (InterruptedException e) {
